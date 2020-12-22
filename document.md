@@ -106,25 +106,71 @@ URL: <http://tsubakit1.hateblo.jp/entry/2019/10/14/215312>
 
 ### 1-2-1. はまったところ
 
+**設定でデバイスを追加したら、マウスの入力を受け付けなくなった。**  
+※注: ちゃんと**説明を読んでいなかった**私が悪いです。
+
+`Project Settings` / `Input System Package`に、`Supported Devices`という項目があります。
+
+![SupportedDevicesを強調した画像](./Images/SupportedDevices.png)
+
+Supported Devicesの項目ですが、上の写真の英文の通り、
+
+* 空の場合：全てのデバイスの入力を取得
+* 何か設定してある場合:設定しているデバイスのみの入力を取得
+
+となっています。
+
+よく読まずにここにデバイスを追加し、追加漏れがあった場合、特定のデバイスで上手く動かないといった現象がおきます。
+
+対応デバイスにこだわりがない場合は、Supported Devicesをいじらない方が良いです。
+
+特定のデバイスのみに限定したい場合、特にエディタから動かす時とビルドして動かす時でデバイスが違う場合は、片方の設定が漏れやすいので、それ単体のタスクとして切り分けて行った方が良いでです。(1敗)
+
+---
+
 ## 2. ※HMD、コントローラの位置情報、入力関係の機能
 
-### 2-1. ※XR Rig
+### 2-1. XR Rig
 
 SteamVR Pluginでいうところの`[SteamVR]`プレハブです。  
 以下のような構成になっています。
 
 ```txt todo: 画像に差し替え
-XRRig(CameraOffsetのPosition.Yを変更するスクリプト付)
+XRRig(XRRig.cs: カメラのY座標を変更するスクリプト 付)
  └ CameraOffset(スクリプトはついていない。HMDの高さ反映用のオブジェクト)
-    ├ XRCamera
-    ├ LeftController(RayInteractor, Ray可視化用のスクリプト付)
-    └ RightController(RayInteractor, Ray可視化用のスクリプト付)
+    ├ Main Camera(TrackedPoseDriver.cs: HMDの位置、角度を取得、反映するスクリプト 付)
+    ├ LeftHand Controller(RayInteractor, Ray可視化用のスクリプト付)
+    └ RightHand Controller(RayInteractor, Ray可視化用のスクリプト付)
 ```
 
-XRCameraについている todo と、[Left / Right]Controllerについている XRControllerはAction-based版とDevice-based版があります。
-XRControllerについては後で説明するので、ここではCameraについて記載します。
+Main Cameraについている`TrackedPoseDriver`と、[Left / Right]Controllerについている `XRController`はAction-based版とDevice-based版があります。
 
-todo: 画像
+#### 内容
+
+XR Rig自体はAction-based、Device-basedともに共通です。
+
+![トラッキングの形態](Images/TrackingOriginMode.png)
+
+XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
+
+* Floorモードの時は、(0, 0, 0)
+* Deviceモードの時は、(0, `Camera Y Offset`, 0)  
+  `Camera Y Offset`はDeviceモードの時のみ設定可能
+
+にするので、プレイヤーを丸ごと移動させたいときには、XR Rigごと移動させる必要があります。  
+**`Camera Floor Offcet Object`に設定したオブジェクトの位置はいじらない**ようにしましょう
+
+ヒエラルキーウィンドウ右クリック / XR でXR Rigを作成する際、Room-ScaleとStationaryの2種類があってどっちを選べばいいかわからないことがあるかもしれません。  
+2つの違いは
+
+* Room-Scale XR RigはFloorモード
+* Stationary XR RigはDeviceモード
+
+だけです。なので、あとから切り替えするのも楽です。
+
+なお、他にもモードがあるように見えますが、XRRig.cs内では全く触りません。
+
+### 2-2. TrackedPoseDriver
 
 #### 共通部分
 
@@ -132,7 +178,7 @@ todo: 画像
 
 #### Device-based
 
-### 2-2. ※XRController
+### 2-3. ※XRController
 
 todo: 画像
 
