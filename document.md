@@ -4,27 +4,28 @@
 
 * 日本語の資料があまりなかったので書きました。品質は期待しないでください。
 * タイトルの通り、XR Interaction Toolkitバージョン1.0.0-pre.1での情報です。
-* Action-basedで変わるのは、XR Rig(コントローラとHMDの入力)周りです。その他の部分に関しては以前のバージョンの資料で大丈夫です。
+* Action-basedで変わるのは、XR Rig(コントローラとヘッドマウントディスプレイの入力)周りです。その他の部分に関しては以前のバージョンの資料で大丈夫です。
 * Qiitaはドメインパワーが強すぎるので、こういうニッチな物は載せないようにしています。ご了承ください。
+* 質問、わかりにくい記載内容の指摘等あれば、気軽にIssueください。(Pull Requestもウェルカムです)
 
 ## 目次
 
 1. そもそも
    1. XR Interaction ToolkitのAction-basedって何？
    2. Input Systemって何？
-2. ※HMD、コントローラの位置情報、入力関係の機能
-   1. ※カメラ(todo)
+2. ※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能
+   1. ※TrackedPoseDriver
    2. ※XRController
-3. ※Interaction関係の機能
+3. ※Interaction関係の機能(TODO)
    1. InteractionManager
    2. ※RayInteractor / Interactable
    3. ※DirectInteractor / Interactable
    4. GrabInteractor / Interactable
    5. SocketInreractor / Interactable
-4. UI関係の機能
+4. UI関係の機能(TODO)
    1. UI Canvas
    2. UI EventSystem
-5. ※移動、テレポーテーション関係の機能
+5. ※移動、テレポーテーション関係の機能(TODO)
    1. ※Locomotion System
    2. Teleportation Area
    3. Teleportation Ancker
@@ -38,7 +39,7 @@
 ## 1.そもそも
 
 Action-based以前にXR Interaction Toolkitって何？という方もいると思うので、そのあたりの説明を入れます。  
-不要な方は 2.※HMD、コントローラの位置情報、入力関係の機能 以降に進んでください。
+不要な方は 2.※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能 以降に進んでください。
 
 ### 1-1. XR Interaction ToolkitのAction-basedって何？
 
@@ -120,7 +121,7 @@ Supported Devicesの項目ですが、上の写真の英文の通り、
 
 となっています。
 
-よく読まずにここにデバイスを追加し、追加漏れがあった場合、特定のデバイスで上手く動かないといった現象がおきます。
+よく読まずに、ここにデバイスを追加し、追加漏れがあった場合、特定のデバイスで上手く動かないといった現象がおきます。
 
 対応デバイスにこだわりがない場合は、Supported Devicesをいじらない方が良いです。
 
@@ -128,7 +129,7 @@ Supported Devicesの項目ですが、上の写真の英文の通り、
 
 ---
 
-## 2. ※HMD、コントローラの位置情報、入力関係の機能
+## 2. ※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能
 
 ### 2-1. XR Rig
 
@@ -137,17 +138,21 @@ SteamVR Pluginでいうところの`[SteamVR]`プレハブです。
 
 ```txt todo: 画像に差し替え
 XRRig(XRRig.cs: カメラのY座標を変更するスクリプト 付)
- └ CameraOffset(スクリプトはついていない。HMDの高さ反映用のオブジェクト)
-    ├ Main Camera(TrackedPoseDriver.cs: HMDの位置、角度を取得、反映するスクリプト 付)
+ └ CameraOffset(スクリプトはついていない。ヘッドマウントディスプレイの高さ反映用のオブジェクト)
+    ├ Main Camera(TrackedPoseDriver.cs: ヘッドマウントディスプレイの位置、角度を取得、反映するスクリプト 付)
     ├ LeftHand Controller(RayInteractor, Ray可視化用のスクリプト付)
     └ RightHand Controller(RayInteractor, Ray可視化用のスクリプト付)
 ```
 
 Main Cameraについている`TrackedPoseDriver`と、[Left / Right]Controllerについている `XRController`はAction-based版とDevice-based版があります。
 
+既存のメインカメラを勝手に削除して、XR Rigを生成するというゲームオブジェクトの作り方をします。  
+もとからあるメインカメラを消されて困る場合は、退避させるなどの対策をしてください。
+
 #### 内容
 
-XR Rig自体はAction-based、Device-basedともに共通です。
+XR Rig自体はAction-based、Device-basedともに共通です。  
+ここの設定はほとんどいじることがないので、比較的いじることがあるTrackingOriginModeの項目についてだけ説明します。
 
 ![トラッキングの形態](Images/TrackingOriginMode.png)
 
@@ -172,26 +177,67 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 
 ### 2-2. TrackedPoseDriver
 
+ヘッドマウントディスプレイのPosition、Rotationを読み込むコンポーネントです。
+実はXR Interaction Toolkitの依存パッケージの機能なので、XR Interaction Toolkitを探しても見つかりません。
+
 #### 共通部分
+
+todo: コンポーネントの画像
+
+このコンポーネントはXR対応しており、VRアプリ開発ではVRヘッドマウントディスプレイの、AR Foundationを利用したARアプリ開発ではARグラス、スマートフォンのPosition、Rotationを読み込むことができます。  
+また、TrackingTypeで3Dofで使用するか、6DoFで使用するかも設定できます。
+
+XR RigでCameraOffsetのPositionを操作し、TrackedPoseDriverでMainCameraのPosition, Rotationを操作するので、実際どういう動きになるんだ？と思う方もいると思うので、解説します。
+
+XR RigはFloor Mode, Device Mode、TrackedPoseDriverはRotationAndPosition, RotationOnly, PositionOnlyとあります。
+ここではPositionについて話すので、TrackedPoseDriverのRotationAndPositionとPositionOnlyはひとまとめにして説明します。
+
+todo: 説明用画像
+
+概要は上の図で理解してもらえると思います。
+
+XR RigはCameraOffset(MainCameraの親)のPositionをFloor Modeで(0, 0, 0)に、Device Modeで(0, `Camera Y Offset`, 0)にします。  
+つまり、MainCameraの土台の高さを6DoFを前提として0mとするか、3DoFを前提として`Camera Y Offset`mとするかを設定します。  
+TrackedPoseDriverはその土台の上でどうふるまう(3DoFか6DoF)かを設定することになります。
+
+もちろん意図してXR Rig Device ModeとTrackedPoseDriver RotationAndPositionで使用することもできますが、逆に意図していない場合は、カメラの位置が意図した場所からずれるといった問題の原因にもなります。
 
 #### Action-based
 
+todo: コンポーネントの画像
+
+Action-baseのTrackedPoseDriverはInputSystem.XR内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)
+
+Input Actionsをシリアライズすることができないので、手動で設定していく必要があります。  
+マウス等でシミュレーションしたい場合は、Package ManagerのXR Interaction ToolkitのサンプルからSimuratorサンプルをインポートすると参考になると思います。
+
 #### Device-based
+
+todo: コンポーネントの画像
 
 ### 2-3. ※XRController
 
 todo: 画像
 
+コントローラのPosition, Rotation, ボタン入力を読み込むコンポーネントです。
+
 #### 共通部分
 
 #### Action-based
 
+Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedPoseDriverを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
+
+コントローラのキーマッピングを行う機能がついていますが、そのためにInput Actionsファイルを要求します。  
+Input Actionsファイルの作成は結構面倒(単純作業だけど量が...)かつ、バグを埋め込みやすい(経験談)ので、Package ManagerのXR Interaction ToolkitのサンプルからDefault Input Actionsサンプルをインポートして、改変していくことをお勧めします。
+
 #### Device-based
+
+---
 
 ## 3. ※Interaction関係の機能
 
 XR Interaction Toolkitのインタレクションは関数を呼ぶ〇〇Interactorと、呼ばれる関数を設定している〇〇Interactableの組で構成されています。
-Interactorで取得したオブジェクトに対になるInteractableが設定されている場合、そのInteractableを呼ぶといった動作をします。
+Interactorで取得したオブジェクトに対になるInteractableが設定されている場合、そのInteractableを呼ぶといった動作をします。todo: 確認
 
 用意されているInteractor以外の機能が必要な場合は、XRBaseControllerInteractorやXRBaseInteractorを継承して新たにスクリプトを書くことで、オリジナルのコンポーネントを作成できます。
 なお作成する場合は、DirectInteractorが一番シンプルなのでDirectInteractorのコードを参考にするのがよいと思います。
@@ -200,6 +246,8 @@ Interactorで取得したオブジェクトに対になるInteractableが設定�
 機能の拡張をしたい場合は、〇〇Interactableを継承して機能を追加するか、XRBaseInteractableを継承してオリジナルのコンポーネントを作成することができます。
 
 ### 3-1. InteractionManager
+
+### XRBaseInteractor / Interactable
 
 ### 3-2. ※RayInteractor / Interactable
 
@@ -233,11 +281,15 @@ todo: 画像
 
 SocketInteracttorに範囲を設定しておいて、対応するInteractableが範囲に入ったとき、そのInteractableを動作させます。
 
+---
+
 ## 4. UI関係の機能
 
 ### 4-1. UI Canvas
 
 ### 4-2. UI EventSystem
+
+---
 
 ## 5. ※移動、テレポーテーション関係の機能
 
@@ -262,6 +314,8 @@ todo: 画像
 #### Device-based
 
 ### 5-3. Teleportation Ancker
+
+---
 
 ## 6. AR関係の機能(TODO)
 
