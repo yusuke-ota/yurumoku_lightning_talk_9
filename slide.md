@@ -19,7 +19,6 @@ yusuke ota
 近況
 
 * ハードディスクが壊れました(このスライドは第2版)
-* ARグラス「RealMax」届きました
 
 ---
 
@@ -54,15 +53,20 @@ Unityの新しい入力制御機能(Input Managerの代わり)
 
 todo: 画像
 
-参考文献:
+詳しくはUnity Leraning Materialsの[新しいInputSystemの使い方](https://learning.unity3d.jp/4080/)を見て
 
 ---
 
 ### XR Interaction Toolkitって何
 
-todo: 動画
-Unite Nowの動画を見て
+#### UnityEngine.XR.Subsystem
+
 Oculus, Vive, Windows MR等メジャーなデバイスを統一APIで使えるすごいやつ
+
+#### XR Interaction Toolkit
+
+XR.Subsystemをラッピングしつつ、
+コントローラのインタラクションを実装を簡単にするパッケージ
 
 ---
 
@@ -73,9 +77,9 @@ Oculus, Vive, Windows MR等メジャーなデバイスを統一APIで使える�
 
 ---
 
-##### PCVR用のプロジェクトをそのままQuest向けにコンバートできないの?
+##### Q: PCVR用のプロジェクトをそのままQuest向けにコンバートできないの?
 
-A: 難しいです。(軽さによる)
+A: 難しいです。(動作の軽さによる)
 
 * スクリプト: 環境独自の機能を使っていない場合は、ほぼ移行できる。(場合によっては最適化が必要)
 * グラフィック: モデルの軽量化、半透明オブジェクトの削除、シャドーのベイクetc すごく大変
@@ -88,7 +92,7 @@ A: 難しいです。(軽さによる)
 * 各SDKの専用機能が使用できない(ex: Oculusの解像度変更機能)
 
 特にQuestは独自機能が多いので、いろいろとつらい  
-SteamVRはちょっとクラッシュしたりした(半年前)ので、人柱を待って
+SteamVRはちょっとクラッシュしたりした(半年前)り、MockHMD XRが壊れていた(1週間前)り、各デバイスのSDKがまだ不安定な感じを受ける。人柱を待って
 
 ---
 
@@ -151,7 +155,7 @@ package managerからインポートできるサンプル
 
 ---
 
-### Button(Canvas)のクリックを認識しなくなった
+### Button(Canvas)がクリックを認識しなくなった
 
 ボタンをトリガーとした機能の確認をEditerの再生で行っていた。
 が、いろいろ設定をいじった時ボタンがマウスのクリックを認識しなくなった。
