@@ -173,7 +173,8 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 
 だけです。なので、あとから切り替えするのも楽です。
 
-なお、他にもモードがあるように見えますが、XRRig.cs内では全く触りません。
+なお、他にもモードがあるように見えますが、XRRig.cs内では全く触りません。  
+(触れられていないので、わかりません)
 
 ### 2-2. TrackedPoseDriver
 
@@ -182,7 +183,11 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 
 #### 共通部分
 
-todo: コンポーネントの画像
+![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
+![DeviceBasedTrackedPoseDriverの画像](./Images/DeviceBasedTrackedPoseDriver.png)
+
+上の図のTrackingType(6DoF or 3DoF)とUpdateType(Updateのタイミング)は共通しています。
+どのデバイスのどの部分を使用するか設定する部分が変わっています。
 
 このコンポーネントはXR対応しており、VRアプリ開発ではVRヘッドマウントディスプレイの、AR Foundationを利用したARアプリ開発ではARグラス、スマートフォンのPosition、Rotationを読み込むことができます。  
 また、TrackingTypeで3Dofで使用するか、6DoFで使用するかも設定できます。
@@ -204,16 +209,22 @@ TrackedPoseDriverはその土台の上でどうふるまう(3DoFか6DoF)かを�
 
 #### Action-based
 
-todo: コンポーネントの画像
+![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 
-Action-baseのTrackedPoseDriverはInputSystem.XR内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)
+Action-baseのTrackedPoseDriverは``InputSystem.XR`内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)  
+ファイルの位置は`Packeages/Input System/InputSystem/Plugin/XR/TrackedPoseDriver.cs`です。
 
 Input Actionsをシリアライズすることができないので、手動で設定していく必要があります。  
 マウス等でシミュレーションしたい場合は、Package ManagerのXR Interaction ToolkitのサンプルからSimuratorサンプルをインポートすると参考になると思います。
 
 #### Device-based
 
-todo: コンポーネントの画像
+![DeviceBasedTrackedPoseDriverの画像](Images/DeviceBasedTrackedPoseDriver.png)
+
+Device-basedのTrackedPoseDriverは`UnityEngine.SpatialTracking`内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.xr.legacyinputhelpers@2.1/api/UnityEngine.SpatialTracking.TrackedPoseDriver.html)  
+ファイルの位置は`Packeages/XR Regacy Input Helper/Runtime/TrackedPoseDriver/TrackedPoseDriver.cs`です。
+
+特に説明することないです。
 
 ### 2-3. ※XRController
 
