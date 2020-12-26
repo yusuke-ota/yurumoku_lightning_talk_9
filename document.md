@@ -181,7 +181,7 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 ヘッドマウントディスプレイのPosition、Rotationを読み込むコンポーネントです。
 実はXR Interaction Toolkitの依存パッケージの機能なので、XR Interaction Toolkitを探しても見つかりません。
 
-#### 共通部分
+#### 共通部分 TrackedPoseDriver
 
 ![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 ![DeviceBasedTrackedPoseDriverの画像](./Images/DeviceBasedTrackedPoseDriver.png)
@@ -207,7 +207,7 @@ TrackedPoseDriverはその土台の上でどうふるまう(3DoFか6DoF)かを�
 
 もちろん意図してXR Rig Device ModeとTrackedPoseDriver RotationAndPositionで使用することもできますが、逆に意図していない場合は、カメラの位置が意図した場所からずれるといった問題の原因にもなります。
 
-#### Action-based
+#### Action-based TrackedPoseDriver
 
 ![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 
@@ -217,7 +217,7 @@ Action-baseのTrackedPoseDriverは``InputSystem.XR`内で実装されていま�
 Input Actionsをシリアライズすることができないので、手動で設定していく必要があります。  
 マウス等でシミュレーションしたい場合は、Package ManagerのXR Interaction ToolkitのサンプルからSimuratorサンプルをインポートすると参考になると思います。
 
-#### Device-based
+#### Device-based TrackedPoseDriver
 
 ![DeviceBasedTrackedPoseDriverの画像](Images/DeviceBasedTrackedPoseDriver.png)
 
@@ -232,16 +232,16 @@ todo: 画像
 
 コントローラのPosition, Rotation, ボタン入力を読み込むコンポーネントです。
 
-#### 共通部分
+#### 共通部分 XRController
 
-#### Action-based
+#### Action-based XRController
 
 Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedPoseDriverを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
 
 コントローラのキーマッピングを行う機能がついていますが、そのためにInput Actionsファイルを要求します。  
 Input Actionsファイルの作成は結構面倒(単純作業だけど量が...)かつ、バグを埋め込みやすい(経験談)ので、Package ManagerのXR Interaction ToolkitのサンプルからDefault Input Actionsサンプルをインポートして、改変していくことをお勧めします。
 
-#### Device-based
+#### Device-based XRController
 
 ---
 
@@ -267,21 +267,21 @@ RayInteractorはレイキャストを飛ばし、一番手前のオブジェク�
 
 todo: 画像
 
-#### 共通部分
+#### 共通部分 RayInteractor / Interactable
 
-#### Action-based
+#### Action-based RayInteractor / Interactable
 
-#### Device-based
+#### Device-based RayInteractor / Interactable
 
 ### 3-3. ※DirectInteractor / Interactable
 
 todo: 画像
 
-#### 共通部分
+#### 共通部分 DirectInteractor / Interactable
 
-#### Action-based
+#### Action-based DirectInteractor / Interactable
 
-#### Device-based
+#### Device-based DirectInteractor / Interactable
 
 ### 3-4. GrabInteractor / Interactable
 
@@ -308,21 +308,21 @@ SocketInteracttorに範囲を設定しておいて、対応するInteractableが
 
 todo: 画像
 
-#### 共通部分
+#### 共通部分 Locomotion System
 
-#### Action-based
+#### Action-based Locomotion System
 
-#### Device-based
+#### Device-based Locomotion System
 
 ### 5-2. Teleportation Area
 
 todo: 画像
 
-#### 共通部分
+#### 共通部分 Teleportation Area
 
-#### Action-based
+#### Action-based Teleportation Area
 
-#### Device-based
+#### Device-based Teleportation Area
 
 ### 5-3. Teleportation Ancker
 
