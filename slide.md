@@ -60,9 +60,16 @@ Unityの新しい入力制御機能(Input Managerの代わり)
 
 ### XR Interaction Toolkitって何
 
+---
+
 #### UnityEngine.XR.Subsystem
 
-Oculus, Vive, Windows MR等メジャーなデバイスを統一APIで使えるすごいやつ
+![h:500](https://camo.githubusercontent.com/7a8d329d58e50631a728619d5e9599edfb1ecd2dd147867b1fdef62a5a2a234d/68747470733a2f2f626c6f67732e756e69747933642e636f6d2f77702d636f6e74656e742f75706c6f6164732f323032302f30312f696d616765312d322e706e67)
+
+[画像引用]Unity XRプラットフォームの最新情報
+<https://blogs.unity3d.com/jp/2020/01/24/unity-xr-platform-updates/>
+
+---
 
 #### XR Interaction Toolkit
 
@@ -93,7 +100,7 @@ A: 難しいです。(動作の軽さによる)
 * 各SDKの専用機能が使用できない(ex: Oculusの解像度変更機能)
 
 特にQuestは独自機能が多いので、いろいろとつらい  
-SteamVRはちょっとクラッシュしたりした(半年前)り、MockHMD XRが壊れていた(1週間前)り、各デバイスのSDKがまだ不安定な感じを受ける。人柱を待って
+OpenVRがちょっとクラッシュしたりした(半年前)り、MockHMD XRが壊れていた(1週間前)り、各デバイスのSDKがまだ不安定な感じを受ける。人柱を待って
 
 ---
 

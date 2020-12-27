@@ -99,7 +99,7 @@ class ReadButton: MonoBehaviour
 }
 ```
 
-[参考]【Unity】出来るだけ簡単にNew Input Systemを使いたい - テラシュールブログ
+[参考]【Unity】出来るだけ簡単にNew Input Systemを使いたい - テラシュールブログ  
 URL: <http://tsubakit1.hateblo.jp/entry/2019/10/14/215312>
 
 上記のコードでは、キーの情報をInput Actionsの中に隠ぺいでき、どのキーをOkボタンに割り当てているかといった情報が出てきません。  
