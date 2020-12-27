@@ -73,7 +73,7 @@ Unityの新しい入力制御機能(Input Managerの代わり)
 
 #### XR Interaction Toolkit
 
-XR.Subsystemをラッピングしつつ、
+XR.Subsystemをラッピングしつつ、  
 コントローラのインタラクションを実装を簡単にするパッケージ
 
 ---
@@ -178,7 +178,7 @@ package managerからインポートできるサンプル
 * 使用するデバイスを全部Supported Devicesに追加する
 * Supported Devicesに何も設定しない(取得できる入力をすべて取得する)
 
-そもそもXR Plug-in Managementの設定を行えば、Editer PlayからPCVRで再生が可能
+そもそもXR Plug-in Managementの設定を行えば、Editer PlayからPCVRで再生が可能  
 (Android VR向けプロジェクトのEditer PlayをOculus Linkで確認したり)
 
 ---

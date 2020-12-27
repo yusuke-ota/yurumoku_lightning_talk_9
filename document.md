@@ -18,7 +18,7 @@
    2. ※XRController
 3. ※Interaction関係の機能(TODO)
    1. InteractionManager
-   2. ※RayInteractor / Interactable
+   2. RayInteractor / Interactable
    3. ※DirectInteractor / Interactable
    4. GrabInteractor / Interactable
    5. SocketInreractor / Interactable
@@ -149,8 +149,6 @@ Main Cameraについている`TrackedPoseDriver`と、[Left / Right]Controller�
 既存のメインカメラを勝手に削除して、XR Rigを生成するというゲームオブジェクトの作り方をします。  
 もとからあるメインカメラを消されて困る場合は、退避させるなどの対策をしてください。
 
-#### 内容
-
 XR Rig自体はAction-based、Device-basedともに共通です。  
 ここの設定はほとんどいじることがないので、比較的いじることがあるTrackingOriginModeの項目についてだけ説明します。
 
@@ -211,7 +209,8 @@ TrackedPoseDriverはその土台の上でどうふるまう(3DoFか6DoF)かを�
 
 ![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 
-Action-baseのTrackedPoseDriverは``InputSystem.XR`内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)  
+Action-baseのTrackedPoseDriverは``InputSystem.XR`内で実装されています。
+[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)  
 ファイルの位置は`Packeages/Input System/InputSystem/Plugin/XR/TrackedPoseDriver.cs`です。
 
 Input Actionsをシリアライズすることができないので、手動で設定していく必要があります。  
@@ -258,31 +257,50 @@ Input Actionsファイルの作成は結構面倒(単純作業だけど量が...
 
 ## 3. ※Interaction関係の機能
 
-XR Interaction Toolkitのインタレクションは関数を呼ぶ〇〇Interactorと、呼ばれる関数を設定している〇〇Interactableの組で構成されています。
-Interactorで取得したオブジェクトに対になるInteractableが設定されている場合、そのInteractableを呼ぶといった動作をします。todo: 確認
+XR Interaction Toolkitのインタレクションは関数を呼ぶ〇〇Interactorと、呼ばれる関数を設定している〇〇Interactableの組で構成されています。  
+Interactorで取得したオブジェクトに対になるInteractableが設定されている場合(InteractionManager経由で確認)、そのInteractableを呼ぶといった動作をします。
 
-用意されているInteractor以外の機能が必要な場合は、XRBaseControllerInteractorやXRBaseInteractorを継承して新たにスクリプトを書くことで、オリジナルのコンポーネントを作成できます。
+用意されているInteractor以外の機能が必要な場合は、XRBaseControllerInteractorやXRBaseInteractorを継承して新たにスクリプトを書くことで、オリジナルのコンポーネントを作成できます。  
 なお作成する場合は、DirectInteractorが一番シンプルなのでDirectInteractorのコードを参考にするのがよいと思います。
 
-用意されているInteractableはTransformをいじる程度の機能しか用意されていません。
+用意されているInteractableはTransformをいじる程度の機能しか用意されていません。  
 機能の拡張をしたい場合は、〇〇Interactableを継承して機能を追加するか、XRBaseInteractableを継承してオリジナルのコンポーネントを作成することができます。
 
 ### 3-1. InteractionManager
 
+InteractorやInteractableの情報を格納するクラスです。  
+Hoverしたかといった、パッシブな(ボタンを押したなどのアクティブでない)場合の機能の実行や、Interactorから、今ヒットしたオブジェクトはInteractableかの問い合わせに対応します。
+
+TODO: 細かいところを追記
+
 ### XRBaseInteractor / Interactable
 
-### 3-2. ※RayInteractor / Interactable
+それぞれ、Interactor、Interactableの元となるabstractクラスです。  
+独自のInteractor、Interactableを作成したい場合は、これらを継承して作ることになります。
 
-RayInteractorはレイキャストを飛ばし、一番手前のオブジェクトを取得する機能です。
-一番手前のオブジェクトにRayInteractableコンポーネントが設定してある場合、そのRayInteractableを動作させます。
+注意点として、1オブジェクトにアタッチできるInteractorは1つまでです。  
+複数付けたい場合は、両方の機能を持ったInteractorを自作する必要があります。
 
-todo: 画像
+#### XRBaseInteractor
 
-#### 共通部分 RayInteractor / Interactable
+todo
 
-#### Action-based RayInteractor / Interactable
+#### XRBaseInetractoable
 
-#### Device-based RayInteractor / Interactable
+todo
+
+### 3-2. RayInteractor
+
+![RayIntractor](./Images/RayIntractor.png)
+
+RayInteractorはレイキャストを飛ばし、一番手前のオブジェクトを取得する機能です。  
+一番手前のオブジェクトにInteractable系コンポーネントが設定してある場合、そのInteractableを動作させます。
+
+また、UI操作機能(UIInteractor)がついている唯一のInteractorです。UIを操作する機能を作りたい場合はこれを参考にすると良いです。
+
+特にはまるところはありません。
+
+Ray自体は不可視なので、LineRenderer、XRInteractorLineVisualと併用することで、飛ばしているレイを可視化して、使用者が認識しやすいようにすることもできます。
 
 ### 3-3. ※DirectInteractor / Interactable
 
