@@ -14,7 +14,6 @@ yusuke ota
 * 名前: yusuke ota
 * 職種: 一般事務
 * 言語: Rust, C#
-* 分類: プログラマワナビー
 
 近況
 
@@ -51,7 +50,9 @@ Unityの新しい入力制御機能(Input Managerの代わり)
 コントローラーのバインディングとかしてくれる便利機能  
 キーボード、ゲームパッド、VR コントローラー等様々なデバイスに対応
 
-todo: 画像
+---
+
+![h:500](./Images/InputActions.png)
 
 詳しくはUnity Leraning Materialsの[新しいInputSystemの使い方](https://learning.unity3d.jp/4080/)を見て
 
@@ -176,14 +177,10 @@ package managerからインポートできるサンプル
 ---
 
 before
-todo: 画像
+![w:800](Images/SupportedDevicesBefore.png)
 
 after
-todo: 画像
-
----
-
-### コントローラが動かない、UIが操作できない
+![w:800](Images/SupportedDevicesAfter.png)
 
 ---
 

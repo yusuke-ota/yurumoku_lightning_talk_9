@@ -102,7 +102,7 @@ class ReadButton: MonoBehaviour
 [参考]【Unity】出来るだけ簡単にNew Input Systemを使いたい - テラシュールブログ
 URL: <http://tsubakit1.hateblo.jp/entry/2019/10/14/215312>
 
-上記のコードでは、Input Actionsの中に隠ぺいでき、どのキーをOkボタンに割り当てているかといった情報が出てきません。  
+上記のコードでは、キーの情報をInput Actionsの中に隠ぺいでき、どのキーをOkボタンに割り当てているかといった情報が出てきません。  
 また、1つのInput Actionsファイルに複数のデバイスを設定することができるため、デバイスの増加に対して、原則コードの書き換えが不要になります。
 
 ### 1-2-1. はまったところ
@@ -228,20 +228,31 @@ Device-basedのTrackedPoseDriverは`UnityEngine.SpatialTracking`内で実装さ�
 
 ### 2-3. ※XRController
 
-todo: 画像
-
 コントローラのPosition, Rotation, ボタン入力を読み込むコンポーネントです。
 
 #### 共通部分 XRController
 
+![XRController比較](./Images/共通XRController.png)
+
+上の画像の通り、デバイスのPosition、Rotation、ボタン入出力、振動といった、物理的なデバイスの情報に関する項目のUIは変わっていますが、その他の部分に関しては変わっていません。
+
 #### Action-based XRController
+
+![ActionBasedXRController](Images/ActionBasedXRController.png)
 
 Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedPoseDriverを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
 
-コントローラのキーマッピングを行う機能がついていますが、そのためにInput Actionsファイルを要求します。  
+コントローラのキーマッピングを行う機能(UseRefarence)がついていますが、そのためにInput Actionsファイルを要求します。  
+UseRefarenceを使わずAction横の`＋`ボタンから追加することもできますが、Input Actionsファイル作成と同じ作業をしないといけないので、おとなしくInput Actionsファイルを作りましょう。
+
 Input Actionsファイルの作成は結構面倒(単純作業だけど量が...)かつ、バグを埋め込みやすい(経験談)ので、Package ManagerのXR Interaction ToolkitのサンプルからDefault Input Actionsサンプルをインポートして、改変していくことをお勧めします。
 
 #### Device-based XRController
+
+![DeviceBasedXRController](Images/DeviceBasedXRController.png)
+
+かなりUIが直観的でわかりやすいので、多分画像の各項目を見たら大体のことはわかると思います。  
+実際それ以上の情報は出せないので、この項目は終わりです。
 
 ---
 
