@@ -240,7 +240,7 @@ Device-basedのTrackedPoseDriverは`UnityEngine.SpatialTracking`内で実装さ�
 
 ![ActionBasedXRController](Images/ActionBasedXRController.png)
 
-Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedPoseDriverを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
+Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedDeviceを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
 
 コントローラのキーマッピングを行う機能(UseRefarence)がついていますが、そのためにInput Actionsファイルを要求します。  
 UseRefarenceを使わずAction横の`＋`ボタンから追加することもできますが、Input Actionsファイル作成と同じ作業をしないといけないので、おとなしくInput Actionsファイルを作りましょう。
