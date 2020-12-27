@@ -16,24 +16,24 @@
 2. ※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能
    1. ※TrackedPoseDriver
    2. ※XRController
-3. Interactor関係の機能(TODO)
-   1. InteractionManager
-   2. XRBaseInteractor
-   3. RayInteractor
-   4. DirectInteractor
-   5. GrabInteractor
-   6. SocketInreractor
-4. Interactable関係の機能(TODO)
-   1. XRBaseInteractable
+3. Interactor関係の機能
+   1. InteractionManager(TODO)
+   2. XRBaseInteractor(TODO)
+   3. XRBaseControllerInteractor(TODO)
+   4. RayInteractor
+   5. DirectInteractor
+   6. SocketInteractor(TODO)
+4. Interactable関係の機能
+   1. XRBaseInteractable(TODO)
    2. SimpleInteractable
-   3. GrabInteractable
-5. UI関係の機能(TODO)
-   1. UI Canvas
-   2. UI EventSystem
-6. ※移動、テレポーテーション関係の機能(TODO)
-   1. ※Locomotion System
-   2. Teleportation Area
-   3. Teleportation Ancker
+   3. GrabInteractable(TODO)
+5. UI関係の機能
+   1. UI Canvas(TODO)
+   2. UI EventSystem(TODO)
+6. ※移動、テレポーテーション関係の機能
+   1. ※Locomotion System(TODO)
+   2. Teleportation Area(TODO)
+   3. Teleportation Ancker(TODO)
 7. AR関係の機能(TODO)
 
 `※`マークがついている項目はAction-based版がある機能です。
@@ -280,11 +280,18 @@ TODO: 細かいところを追記
 
 ### XRBaseInteractor
 
-Interactorの元となるabstractクラスです。  
-独自のInteractorを作成したい場合は、これらを継承して作ることになります。
+SocketInteractor, XRBaseControllerInteractorの継承元です。  
+独自のコントローラを必要としないInteractorを作成したい場合は、これを継承して作ることになります。
 
 注意点として、1オブジェクトにアタッチできるInteractorは1つまでです。  
 複数付けたい場合は、両方の機能を持ったInteractorを自作する必要があります。
+
+todo
+
+### XRBaseControllerInteractor
+
+RayInteractor, DirectInteractor, GrabInteractorの継承元です。
+コントローラからの入力を受け取るInteractorを作成したい場合は、これを継承して作ることになります。
 
 todo
 
@@ -318,16 +325,27 @@ DirectInteractorはSellectに割り当てられたボタンが押された時、
 といった部分が自分で設定するときに忘れやすいポイントになります。  
 `Direct Interactor does not have required Collider set as a trigger.`というエラーが出たらこの部分の設定が上手くできていません。
 
-### 3-4. GrabInteractor
+### 3-4. SocketInteractor
 
-todo
-
-### 3-5. SocketInreractor
+![SocketInterractor](./Images/SocketInterractor.png)
 
 公式で用意しているInreractorの中で、唯一Controllerを利用しない機能です。  
 コントローラ以外でInteractableを動作させたい場合にはこのスクリプトを参考に実装すると良いと思います。
 
-SocketInteracttorに範囲を設定しておいて、対応するInteractableが範囲に入ったとき、そのInteractableを動作させます。
+同じゲームオブジェクトにコライダーをトリガーとして設定しておいて、対応するGrab Interactableがコライダーと接触したとき、そのGrab Interactableを動作させます(移動させます)。  
+接触したオブジェクトの位置をAttachedTransformに設定するInteractorなので、移動機能がついているGrab Interactableのみを対象とします。
+
+Attached TransformはInteractableを設置する位置として使用されます。  
+Starting Selected Interactableは特定のInteractableのみに反応してほしい時に設定する項目になります。
+
+はまりやすいポイントは、DirectInteractorと同様です。
+
+**はまりやすいポイント**
+
+* コライダーと同時利用
+* コライダーの`トリガーにする`設定をオンにする
+
+といった部分が自分で設定するときに忘れやすいポイントになります。  
 
 ### XRBaseInetractoable
 
