@@ -16,20 +16,25 @@
 2. ※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能
    1. ※TrackedPoseDriver
    2. ※XRController
-3. ※Interaction関係の機能(TODO)
+3. Interactor関係の機能(TODO)
    1. InteractionManager
-   2. RayInteractor / Interactable
-   3. ※DirectInteractor / Interactable
-   4. GrabInteractor / Interactable
-   5. SocketInreractor / Interactable
-4. UI関係の機能(TODO)
+   2. XRBaseInteractor
+   3. RayInteractor
+   4. DirectInteractor
+   5. GrabInteractor
+   6. SocketInreractor
+4. Interactable関係の機能(TODO)
+   1. XRBaseInteractable
+   2. SimpleInteractable
+   3. GrabInteractable
+5. UI関係の機能(TODO)
    1. UI Canvas
    2. UI EventSystem
-5. ※移動、テレポーテーション関係の機能(TODO)
+6. ※移動、テレポーテーション関係の機能(TODO)
    1. ※Locomotion System
    2. Teleportation Area
    3. Teleportation Ancker
-6. AR関係の機能(TODO)
+7. AR関係の機能(TODO)
 
 `※`マークがついている項目はAction-based版がある機能です。
 
@@ -255,7 +260,7 @@ Input Actionsファイルの作成は結構面倒(単純作業だけど量が...
 
 ---
 
-## 3. ※Interaction関係の機能
+## 3. Interaction関係の機能
 
 XR Interaction Toolkitのインタレクションは関数を呼ぶ〇〇Interactorと、呼ばれる関数を設定している〇〇Interactableの組で構成されています。  
 Interactorで取得したオブジェクトに対になるInteractableが設定されている場合(InteractionManager経由で確認)、そのInteractableを呼ぶといった動作をします。
@@ -273,19 +278,13 @@ Hoverしたかといった、パッシブな(ボタンを押したなどのア�
 
 TODO: 細かいところを追記
 
-### XRBaseInteractor / Interactable
+### XRBaseInteractor
 
-それぞれ、Interactor、Interactableの元となるabstractクラスです。  
-独自のInteractor、Interactableを作成したい場合は、これらを継承して作ることになります。
+Interactorの元となるabstractクラスです。  
+独自のInteractorを作成したい場合は、これらを継承して作ることになります。
 
 注意点として、1オブジェクトにアタッチできるInteractorは1つまでです。  
 複数付けたい場合は、両方の機能を持ったInteractorを自作する必要があります。
-
-#### XRBaseInteractor
-
-todo
-
-#### XRBaseInetractoable
 
 todo
 
@@ -293,7 +292,7 @@ todo
 
 ![RayIntractor](./Images/RayIntractor.png)
 
-RayInteractorはレイキャストを飛ばし、一番手前のオブジェクトを取得する機能です。  
+RayInteractorはSellectに割り当てられたボタンが押された時、レイキャストを飛ばし、一番手前のオブジェクトを取得する機能です。  
 一番手前のオブジェクトにInteractable系コンポーネントが設定してある場合、そのInteractableを動作させます。
 
 また、UI操作機能(UIInteractor)がついている唯一のInteractorです。UIを操作する機能を作りたい場合はこれを参考にすると良いです。
@@ -302,24 +301,55 @@ RayInteractorはレイキャストを飛ばし、一番手前のオブジェク�
 
 Ray自体は不可視なので、LineRenderer、XRInteractorLineVisualと併用することで、飛ばしているレイを可視化して、使用者が認識しやすいようにすることもできます。
 
-### 3-3. ※DirectInteractor / Interactable
+### 3-3. DirectInteractor
 
-todo: 画像
+![DirectInteractor](Images/DirectInteractor.png)
 
-#### 共通部分 DirectInteractor / Interactable
+DirectInteractorはSellectに割り当てられたボタンが押された時、同じゲームオブジェクトにアタッチされているコライダーをトリガーとして、トリガーのコライダーに接触しているオブジェクトを取得する機能です。  
+取得したオブジェクトにInteractable系コンポーネントが設定してある場合、そのInteractableを動作させます。  
 
-#### Action-based DirectInteractor / Interactable
+上の画像ではSphereColliderを使用していますが、コライダーだったらなんでもいいです。
 
-#### Device-based DirectInteractor / Interactable
+**はまりやすいポイント**
 
-### 3-4. GrabInteractor / Interactable
+* コライダーと同時利用
+* コライダーの`トリガーにする`設定をオンにする
 
-### 3-5. SocketInreractor / Interactable
+といった部分が自分で設定するときに忘れやすいポイントになります。  
+`Direct Interactor does not have required Collider set as a trigger.`というエラーが出たらこの部分の設定が上手くできていません。
+
+### 3-4. GrabInteractor
+
+todo
+
+### 3-5. SocketInreractor
 
 公式で用意しているInreractorの中で、唯一Controllerを利用しない機能です。  
 コントローラ以外でInteractableを動作させたい場合にはこのスクリプトを参考に実装すると良いと思います。
 
 SocketInteracttorに範囲を設定しておいて、対応するInteractableが範囲に入ったとき、そのInteractableを動作させます。
+
+### XRBaseInetractoable
+
+Interactableの元となるabstractクラスです。  
+独自のInteractableを作成したい場合は、これらを継承して作ることになります。
+
+todo
+
+### SimpleInteractable
+
+XRBaseInetractoableを継承しただけのInteractableです。  
+XRBaseInetractoableがどういう機能を持っているかUnity Editor上で見たい時、トリガーとしての機能が欲しいだけの時に便利です。
+
+全てXRBaseInetractoableと同じなので、詳しくはXRBaseInetractoableの項目を読んでください。
+
+ほんとに実装これだけなんで。
+
+```C#
+public class XRSimpleInteractable : XRBaseInteractable{}
+```
+
+### GrabInteractable
 
 ---
 
