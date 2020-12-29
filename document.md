@@ -3,8 +3,11 @@
 ## 注
 
 * 日本語の資料があまりなかったので書きました。品質は期待しないでください。
-* タイトルの通り、XR Interaction Toolkitバージョン1.0.0-pre.1での情報です。
-* Action-basedで変わるのは、XR Rig(コントローラとヘッドマウントディスプレイの入力)周りです。その他の部分に関しては以前のバージョンの資料で大丈夫です。
+* XR Interaction Toolkitバージョン1.0.0-pre.1での情報です。
+* Action-basedで変わるのは、XR Rig(コントローラとヘッドマウントディスプレイの入力)周りです。  
+  その他の部分に関しては以前のバージョンの資料で大丈夫です。
+* このファイルでは、実際使う時に知りたくなる表層部分のみ記載します。
+  実装部分が気になる方は、別のファイル(todo)を参照して下さい。
 * Qiitaはドメインパワーが強すぎるので、こういうニッチな物は載せないようにしています。ご了承ください。
 * 質問、わかりにくい記載内容の指摘等あれば、気軽にIssueください。(Pull Requestもウェルカムです)
 
@@ -22,7 +25,7 @@
    3. XRBaseControllerInteractor(TODO)
    4. RayInteractor
    5. DirectInteractor
-   6. SocketInteractor(TODO)
+   6. SocketInteractor
 4. Interactable関係の機能
    1. XRBaseInteractable(TODO)
    2. SimpleInteractable
@@ -138,7 +141,9 @@ Supported Devicesの項目ですが、上の写真の英文の通り、
 
 ### 2-1. XR Rig
 
-SteamVR Pluginでいうところの`[SteamVR]`プレハブです。  
+![XRRig一式を作成](Images/CreateXRRig.png)
+
+SteamVR Pluginでいうところの`[CameraRig]`プレハブです。  
 以下のような構成になっています。
 
 ```txt todo: 画像に差し替え
@@ -154,8 +159,7 @@ Main Cameraについている`TrackedPoseDriver`と、[Left / Right]Controller�
 既存のメインカメラを勝手に削除して、XR Rigを生成するというゲームオブジェクトの作り方をします。  
 もとからあるメインカメラを消されて困る場合は、退避させるなどの対策をしてください。
 
-XR Rig自体はAction-based、Device-basedともに共通です。  
-ここの設定はほとんどいじることがないので、比較的いじることがあるTrackingOriginModeの項目についてだけ説明します。
+XR Rig自体はAction-based、Device-basedともに共通です。
 
 ![トラッキングの形態](Images/TrackingOriginMode.png)
 
@@ -189,15 +193,15 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 ![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 ![DeviceBasedTrackedPoseDriverの画像](./Images/DeviceBasedTrackedPoseDriver.png)
 
-上の図のTrackingType(6DoF or 3DoF)とUpdateType(Updateのタイミング)は共通しています。
-どのデバイスのどの部分を使用するか設定する部分が変わっています。
+上の図のTrackingType(6DoF or 3DoF)とUpdateType(Updateのタイミング)は共通しています。  
+どのデバイスのどの部分を使用するか設定する部分が違います。
 
 このコンポーネントはXR対応しており、VRアプリ開発ではVRヘッドマウントディスプレイの、AR Foundationを利用したARアプリ開発ではARグラス、スマートフォンのPosition、Rotationを読み込むことができます。  
 また、TrackingTypeで3Dofで使用するか、6DoFで使用するかも設定できます。
 
 XR RigでCameraOffsetのPositionを操作し、TrackedPoseDriverでMainCameraのPosition, Rotationを操作するので、実際どういう動きになるんだ？と思う方もいると思うので、解説します。
 
-XR RigはFloor Mode, Device Mode、TrackedPoseDriverはRotationAndPosition, RotationOnly, PositionOnlyとあります。
+XR RigはFloor Mode, Device Mode、TrackedPoseDriverはRotationAndPosition, RotationOnly, PositionOnlyとあります。  
 ここではPositionについて話すので、TrackedPoseDriverのRotationAndPositionとPositionOnlyはひとまとめにして説明します。
 
 todo: 説明用画像
@@ -214,11 +218,12 @@ TrackedPoseDriverはその土台の上でどうふるまう(3DoFか6DoF)かを�
 
 ![ActionBasedTrackedPoseDriverの画像](./Images/ActionBasedTrackedPoseDriver.png)
 
-Action-baseのTrackedPoseDriverは``InputSystem.XR`内で実装されています。
+Action-baseのTrackedPoseDriverは`InputSystem.XR`内で実装されています。
 [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.TrackedPoseDriver.html)  
 ファイルの位置は`Packeages/Input System/InputSystem/Plugin/XR/TrackedPoseDriver.cs`です。
 
 Input Actionsをシリアライズすることができないので、手動で設定していく必要があります。  
+Position Action, Rotation ActionはそれぞれVector3, Quaternionしか受け付けないので、マウスやキーボードを設定することはできません。  
 マウス等でシミュレーションしたい場合は、Package ManagerのXR Interaction ToolkitのサンプルからSimuratorサンプルをインポートすると参考になると思います。
 
 #### Device-based TrackedPoseDriver
@@ -228,7 +233,13 @@ Input Actionsをシリアライズすることができないので、手動で�
 Device-basedのTrackedPoseDriverは`UnityEngine.SpatialTracking`内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.xr.legacyinputhelpers@2.1/api/UnityEngine.SpatialTracking.TrackedPoseDriver.html)  
 ファイルの位置は`Packeages/XR Regacy Input Helper/Runtime/TrackedPoseDriver/TrackedPoseDriver.cs`です。
 
-特に説明することないです。
+UseRelativeTransformは通常はOFFにします。  
+この時、内部的には、デバイスの座標はそのまま処理されます。
+
+(注:コードを読んだだけで使ったことないです。誤りがあるかもしれません)  
+TrackedPoseDriverの親を変更せずに、特定の位置を親としたふるまいをさせたい場合はUseRelativeTransformをONにします。  
+特定の位置は(Pose型)TrackedPoseDriver.originPoseでアクセスできます。  
+内部的には、デバイスの位置を`デバイスのPose.GetTransformedBy(originPose)`として処理しています。
 
 ### 2-3. ※XRController
 
@@ -274,7 +285,7 @@ Interactorで取得したオブジェクトに対になるInteractableが設定�
 ### 3-1. InteractionManager
 
 InteractorやInteractableの情報を格納するクラスです。  
-Hoverしたかといった、パッシブな(ボタンを押したなどのアクティブでない)場合の機能の実行や、Interactorから、今ヒットしたオブジェクトはInteractableかの問い合わせに対応します。
+Hoverしたかといった、パッシブな(ボタンを押したなどのアクティブでない)場合の機能の実行や、Interactorから、今ヒットしたオブジェクトはInteractableかどうかの問い合わせに対応します。
 
 TODO: 細かいところを追記
 
@@ -333,7 +344,7 @@ DirectInteractorはSellectに割り当てられたボタンが押された時、
 コントローラ以外でInteractableを動作させたい場合にはこのスクリプトを参考に実装すると良いと思います。
 
 同じゲームオブジェクトにコライダーをトリガーとして設定しておいて、対応するGrab Interactableがコライダーと接触したとき、そのGrab Interactableを動作させます(移動させます)。  
-接触したオブジェクトの位置をAttachedTransformに設定するInteractorなので、移動機能がついているGrab Interactableのみを対象とします。
+接触したオブジェクトの位置をAttachedTransformに設定するInteractorなので、移動機能が実装されているGrab Interactableのみを対象とします。
 
 Attached TransformはInteractableを設置する位置として使用されます。  
 Starting Selected Interactableは特定のInteractableのみに反応してほしい時に設定する項目になります。
@@ -345,7 +356,7 @@ Starting Selected Interactableは特定のInteractableのみに反応してほ�
 * コライダーと同時利用
 * コライダーの`トリガーにする`設定をオンにする
 
-といった部分が自分で設定するときに忘れやすいポイントになります。  
+といった部分が自分で設定するときに忘れやすいポイントになります。
 
 ### XRBaseInetractoable
 
