@@ -204,7 +204,7 @@ XR RigでCameraOffsetのPositionを操作し、TrackedPoseDriverでMainCameraの
 XR RigはFloor Mode, Device Mode、TrackedPoseDriverはRotationAndPosition, RotationOnly, PositionOnlyとあります。  
 ここではPositionについて話すので、TrackedPoseDriverのRotationAndPositionとPositionOnlyはひとまとめにして説明します。
 
-todo: 説明用画像
+![XRCameraRigPosition](./Images/XRCameraRigPosition.drawio.svg)
 
 概要は上の図で理解してもらえると思います。
 
@@ -258,7 +258,7 @@ TrackedPoseDriverの親を変更せずに、特定の位置を親としたふる
 Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedDeviceを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
 
 コントローラのキーマッピングを行う機能(UseRefarence)がついていますが、そのためにInput Actionsファイルを要求します。  
-UseRefarenceを使わずAction横の`＋`ボタンから追加することもできますが、Input Actionsファイル作成と同じ作業をしないといけないので、おとなしくInput Actionsファイルを作りましょう。
+UseRefarenceを使わずAction横の`＋`ボタンから追加することもできますが、Input Actionsファイル作成とほぼ同じ作業をしないといけないので、おとなしくInput Actionsファイルを作りましょう。
 
 Input Actionsファイルの作成は結構面倒(単純作業だけど量が...)かつ、バグを埋め込みやすい(経験談)ので、Package ManagerのXR Interaction ToolkitのサンプルからDefault Input Actionsサンプルをインポートして、改変していくことをお勧めします。
 
