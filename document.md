@@ -2,13 +2,13 @@
 
 ## 注
 
+* とりあえず使ってみたいだけだったら、[公式ドキュメント](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@1.0/manual/index.html)で大丈夫です。
+  このドキュメントは、補足的なものになります。
+* 実装例が見たい場合は[GitHubの公式リポジトリのサンプル](https://github.com/Unity-Technologies/XR-Interaction-Toolkit-Examples)をご覧ください。(記載時点でちょっと古いですけど)
 * 日本語の資料があまりなかったので書きました。品質は期待しないでください。
 * XR Interaction Toolkitバージョン1.0.0-pre.1での情報です。
 * Action-basedで変わるのは、XR Rig(コントローラとヘッドマウントディスプレイの入力)周りです。  
   その他の部分に関しては以前のバージョンの資料で大丈夫です。
-* このファイルでは、実際使う時に知りたくなる表層部分のみ記載します。
-  実装部分が気になる方は、別のファイル(todo)を参照して下さい。
-* Qiitaはドメインパワーが強すぎるので、こういうニッチな物は載せないようにしています。ご了承ください。
 * 質問、わかりにくい記載内容の指摘等あれば、気軽にIssueください。(Pull Requestもウェルカムです)
 
 ## 目次
@@ -41,13 +41,13 @@
 
 `※`マークがついている項目はAction-based版がある機能です。
 
-その他の機能はAction-basedとDevice-basedで共通です。
-そこそこ情報が出ているので、このドキュメントを読まなくても良いです。
+その他の機能はAction-basedとDevice-basedで共通です。  
+Device-basedはそこそこ情報が出ているので、このドキュメントを読まなくても良いです。
 
 ## 1.そもそも
 
 Action-based以前にXR Interaction Toolkitって何？という方もいると思うので、そのあたりの説明を入れます。  
-不要な方は 2.※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能 以降に進んでください。
+不要な方は [2.※ヘッドマウントディスプレイ、コントローラの位置情報、入力関係の機能] 以降に進んでください。
 
 ### 1-1. XR Interaction ToolkitのAction-basedって何？
 
@@ -57,21 +57,22 @@ Input Systemを利用する機能は機能名の後ろに`(Action-based)`がつ�
 Input Systemを使用することで、VRコントローラ以外も使用できるようにしたり、特定のコントローラのみキーマッピングを変えるといったことができるようになります。
 
 なお、バージョン0.10.0-preview.1以前の機能は`(Device-based)`が付きます。  
-XR Rig周りが変わるだけなので、それ以外の機能に関しては以前のバージョンの資料でも大丈夫です。
+XR Rig周りとLocomotionが変わるだけなので、それ以外の機能に関しては以前のバージョンの資料でも大丈夫です。
 
 ## 1-2. Input Systemって何？
 
 新しい入力管理機能です。
 
 ここではざっくり説明します。  
-細かい話は、Unity Leraning Materialsの[新しいInputSystemの使い方](https://learning.unity3d.jp/4080/)を見てください。
+細かい話は、Unity Leraning Materialsの[新しいInputSystemの使い方](https://learning.unity3d.jp/4080/)を見てください。とてもいい動画です。
 
 今までの入力管理機能Input Managerでは入力を得るとき
 
 ```C#
 using UnityEngine;
 
-class ReadButton: MonoBehaviour{
+class ReadButton: MonoBehaviour
+{
     private void Update()
     {
         bool isPushedOkButton = input.GetKeyDown(KeyCode.A);
@@ -113,7 +114,7 @@ URL: <http://tsubakit1.hateblo.jp/entry/2019/10/14/215312>
 上記のコードでは、キーの情報をInput Actionsの中に隠ぺいでき、どのキーをOkボタンに割り当てているかといった情報が出てきません。  
 また、1つのInput Actionsファイルに複数のデバイスを設定することができるため、デバイスの増加に対して、原則コードの書き換えが不要になります。
 
-### 1-2-1. はまったところ
+### 1-2-1. はまったところ Input System
 
 **設定でデバイスを追加したら、マウスの入力を受け付けなくなった。**  
 ※注: ちゃんと**説明を読んでいなかった**私が悪いです。
@@ -156,7 +157,7 @@ XRRig(XRRig.cs: カメラのY座標を変更するスクリプト 付)
 
 Main Cameraについている`TrackedPoseDriver`と、[Left / Right]Controllerについている `XRController`はAction-based版とDevice-based版があります。
 
-既存のメインカメラを勝手に削除して、XR Rigを生成するというゲームオブジェクトの作り方をします。  
+**既存のメインカメラを勝手に削除**して、XR Rigを生成するというゲームオブジェクトの作り方をします。  
 もとからあるメインカメラを消されて困る場合は、退避させるなどの対策をしてください。
 
 XR Rig自体はAction-based、Device-basedともに共通です。
@@ -170,7 +171,7 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
   `Camera Y Offset`はDeviceモードの時のみ設定可能
 
 にするので、プレイヤーを丸ごと移動させたいときには、XR Rigごと移動させる必要があります。  
-**`Camera Floor Offcet Object`に設定したオブジェクトの位置はいじらない**ようにしましょう
+**`Camera Floor Offcet Object`に設定したオブジェクトの位置はいじらない**ようにしましょう。上書きされます。
 
 ヒエラルキーウィンドウ右クリック / XR でXR Rigを作成する際、Room-ScaleとStationaryの2種類があってどっちを選べばいいかわからないことがあるかもしれません。  
 2つの違いは
@@ -180,7 +181,7 @@ XR Rig.csは`Camera Floor Offcet Object`のLocalPositionを
 
 だけです。なので、あとから切り替えするのも楽です。
 
-なお、他にもモードがあるように見えますが、XRRig.cs内では全く触りません。  
+なお、他にもモードがあるように見えますが、XRRig.cs内では触りません。  
 (触れられていないので、わかりません)
 
 ### 2-2. TrackedPoseDriver
@@ -251,11 +252,22 @@ TrackedPoseDriverの親を変更せずに、特定の位置を親としたふる
 
 上の画像の通り、デバイスのPosition、Rotation、ボタン入出力、振動といった、物理的なデバイスの情報に関する項目のUIは変わっていますが、その他の部分に関しては変わっていません。
 
+上の画像でオレンジの線で囲んだ共通部分の話をします。
+
+TrackingのUpdateTrackingTypeはどのタイミングで、デバイスの位置情報を取得するかの設定になります。  
+それぞれの項目の違いは処理を呼ぶタイミング(Update or BeforeRender)と回数(UpdateAndBeforeRender or else)だけで、処理自体は同一です。  
+また、EnableInputTrackingはデバイスのトランスフォームの更新をするかどうかの設定になります。
+
+InputのEnableInputActionsはEnableInputTracking同様、コントローラーのボタン入力を受け付けるがどうかの設定になります。
+
+Modelに関しては使ったことがないので、はっきりしたことは言えないのですが、おそらくコントローラーのモデルなどはここにセットするのが正規の実装になると思われます。(今までゲームオブジェクトにプレハブくっつけてました...)
+コードを読む限り、モデルのプレハブをModelPrefabに設定すると、ModelTransformの子として、モデルがインスタンス化され、必要に応じて(AnimateModel)設定されたアニメーションが実行される要です。
+
 #### Action-based XRController
 
 ![ActionBasedXRController](Images/ActionBasedXRController.png)
 
-Action-basedのXRControllerはInputSystem.XR内で実装されています。(TrackedDeviceを継承しています) [リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
+Action-basedのXRControllerはInputSystem.XR内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.XR.XRController.html)
 
 コントローラのキーマッピングを行う機能(UseRefarence)がついていますが、そのためにInput Actionsファイルを要求します。  
 UseRefarenceを使わずAction横の`＋`ボタンから追加することもできますが、Input Actionsファイル作成とほぼ同じ作業をしないといけないので、おとなしくInput Actionsファイルを作りましょう。
@@ -265,6 +277,8 @@ Input Actionsファイルの作成は結構面倒(単純作業だけど量が...
 #### Device-based XRController
 
 ![DeviceBasedXRController](Images/DeviceBasedXRController.png)
+
+Device-basedのXRControllerはXR Interaction Toolkit内で実装されています。[リンク](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.TrackedDevice.html)
 
 かなりUIが直観的でわかりやすいので、多分画像の各項目を見たら大体のことはわかると思います。  
 実際それ以上の情報は出せないので、この項目は終わりです。
